@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 
 public class DeliveryTest {
@@ -25,6 +26,7 @@ public class DeliveryTest {
     @BeforeEach
     void setUpAll() {
         faker = new Faker(new Locale("ru"));
+        open("http://localhost:9999/");
     }
 
     @Test
@@ -35,7 +37,6 @@ public class DeliveryTest {
         String name = info.getName();
         String phone = info.getPhone();
 
-        open("http://localhost:9999/");
         Configuration.holdBrowserOpen = true;
         $("[data-test-id=city] input").setValue(city);
         $("[data-test-id=date] input").sendKeys(Keys.CONTROL + "a");
@@ -47,6 +48,27 @@ public class DeliveryTest {
         $("button.button").click();
         $(".notification__content")
                 .shouldHave(Condition.text("Встреча успешно запланирована на " + date), Duration.ofSeconds(15))
-                .shouldBe(Condition.visible);
+                .shouldBe(visible);
+
+        $("[data-test-id=city] input").sendKeys(Keys.CONTROL + "a");
+        $("[data-test-id=city] input").sendKeys(Keys.BACK_SPACE);
+        $("[data-test-id=city] input").setValue(city);
+        $("[data-test-id=date] input").sendKeys(Keys.CONTROL + "a");
+        $("[data-test-id=date] input").sendKeys(Keys.BACK_SPACE);
+        $("[data-test-id=date] input").setValue(date);
+        $("[data-test-id=name] input").sendKeys(Keys.CONTROL + "a");
+        $("[data-test-id=name] input").sendKeys(Keys.BACK_SPACE);
+        $("[data-test-id=name] input").setValue(name);
+        $("[data-test-id=phone] input").sendKeys(Keys.CONTROL + "a");
+        $("[data-test-id=phone] input").sendKeys(Keys.BACK_SPACE);
+        $("[data-test-id=phone] input").setValue(phone);
+        $("button.button").click();
+        $(".notification_status_error")
+                .shouldHave(Condition.text("У вас уже запланирована встреча на другую дату. Перепланировать?"))
+                .shouldBe(visible);
+        $x("//*[text()='Перепланировать']").click();
+        $(".notification__content")
+                .shouldHave(Condition.text("Встреча успешно запланирована на " + date), Duration.ofSeconds(15))
+                .shouldBe(visible);
     }
 }
