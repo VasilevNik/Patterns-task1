@@ -1,7 +1,8 @@
-package ru.netology;
+package data;
 
 import com.github.javafaker.Faker;
 import lombok.experimental.UtilityClass;
+import entities.UserInfo;
 
 import java.util.Locale;
 
@@ -18,6 +19,4 @@ public class DataGenerator {
                     faker.phoneNumber().phoneNumber());
         }
     }
-
-
 }

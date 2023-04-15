@@ -1,8 +1,10 @@
 package ru.netology;
 
+import data.DataGenerator;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.github.javafaker.Faker;
+import entities.UserInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
@@ -46,7 +48,7 @@ public class DeliveryTest {
         $("[data-test-id=phone] input").setValue(phone);
         $("[data-test-id=agreement]").click();
         $("button.button").click();
-        $(".notification__content")
+        $("div.notification__content")
                 .shouldHave(Condition.text("Встреча успешно запланирована на " + date), Duration.ofSeconds(15))
                 .shouldBe(visible);
 
@@ -63,11 +65,11 @@ public class DeliveryTest {
         $("[data-test-id=phone] input").sendKeys(Keys.BACK_SPACE);
         $("[data-test-id=phone] input").setValue(phone);
         $("button.button").click();
-        $(".notification_status_error")
+        $("div.notification_status_error")
                 .shouldHave(Condition.text("У вас уже запланирована встреча на другую дату. Перепланировать?"))
                 .shouldBe(visible);
         $x("//*[text()='Перепланировать']").click();
-        $(".notification__content")
+        $("div.notification__content")
                 .shouldHave(Condition.text("Встреча успешно запланирована на " + date), Duration.ofSeconds(15))
                 .shouldBe(visible);
     }

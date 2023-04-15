@@ -1,4 +1,4 @@
-package ru.netology;
+package entities;
 
 
 import lombok.Data;
